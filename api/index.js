@@ -2,8 +2,6 @@
 // api/index.js
 // Recibe datos de Zapier, calcula puntajes, llama a Claude, genera HTML
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 // ── CONSTANTES ──
 const PESOS = {
@@ -543,9 +541,14 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'ANTHROPIC_API_KEY no configurada' });
     }
 
-    // Leer archivos del repositorio
-    const promptMaestro = readFileSync(join(process.cwd(), 'prompt_maestro.txt'), 'utf8');
-    const template = readFileSync(join(process.cwd(), 'template.html'), 'utf8');
+    // Leer archivos desde GitHub
+    const GITHUB_RAW = 'https://raw.githubusercontent.com/gustargestion/pulso-gustar/main';
+    const [promptRes, templateRes] = await Promise.all([
+      fetch(GITHUB_RAW + '/prompt_maestro.txt'),
+      fetch(GITHUB_RAW + '/template.html')
+    ]);
+    const promptMaestro = await promptRes.text();
+    const template = await templateRes.text();
 
     // 1. Calcular puntajes (determinístico)
     const diagnostico = calcularPuntajes(body);
