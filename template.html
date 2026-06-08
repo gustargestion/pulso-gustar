@@ -1,998 +1,216 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PULSO by Gustar — Informe DMO · {{NOMBRE_RESTAURANTE}}</title>
+<title>PULSO by Gustar — {{NOMBRE_RESTAURANTE}}</title>
 <style>
-  /* ── VARIABLES DE MARCA PULSO ── */
   :root {
-    --carbon:   #2C2C2A;
-    --naranja:  #D85A30;
-    --gris:     #888780;
-    --arena:    #F1EFE8;
-    --blanco:   #FFFFFF;
-
-    /* Niveles de madurez */
-    --nivel-0-bg: #FFEBEE; --nivel-0-fg: #B71C1C;
-    --nivel-1-bg: #FFCDD2; --nivel-1-fg: #E53935;
-    --nivel-2-bg: #FBE9E7; --nivel-2-fg: #D85A30;
-    --nivel-3-bg: #EFEBE9; --nivel-3-fg: #4E342E;
-    --nivel-4-bg: #E8F5E9; --nivel-4-fg: #2E7D32;
-    --nivel-5-bg: #E8EAF6; --nivel-5-fg: #1A237E;
-
-    /* Etiquetas */
-    --critico-bg: #FFEBEE;  --critico-fg: #B71C1C;
-    --riesgo-bg:  #FFCDD2;  --riesgo-fg:  #E53935;
-    --atencion-bg:#FBE9E7;  --atencion-fg:#D85A30;
-    --desarrollo-bg:#EFEBE9;--desarrollo-fg:#4E342E;
-    --avanzado-bg:#E8F5E9;  --avanzado-fg:#2E7D32;
-    --fortaleza-bg:#E8EAF6; --fortaleza-fg:#1A237E;
-
-    --font: 'Arial', 'Helvetica Neue', sans-serif;
-    --radius: 6px;
-    --shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: var(--font);
-    background: var(--blanco);
-    color: var(--carbon);
-    font-size: 11pt;
-    line-height: 1.5;
-  }
-
-  /* ── PÁGINA ── */
-  .page {
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0 auto;
-    background: var(--blanco);
-    padding: 0;
-  }
-
-  @media print {
-    body { margin: 0; }
-    .page { width: 100%; margin: 0; page-break-after: always; }
-    .no-break { page-break-inside: avoid; }
-  }
-
-  /* ── PORTADA ── */
-  .portada {
-    background: var(--carbon);
-    min-height: 297mm;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-  }
-
-  .portada-header {
-    background: var(--naranja);
-    padding: 20px 32px 16px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .portada-logo-nombre {
-    font-size: 28pt;
-    font-weight: 700;
-    color: var(--blanco);
-    letter-spacing: -0.5px;
-  }
-
-  .portada-logo-endoso {
-    font-size: 10pt;
-    color: rgba(255,255,255,0.85);
-    font-style: italic;
-    margin-top: 2px;
-  }
-
-  .portada-onda {
-    color: var(--blanco);
-    font-size: 18pt;
-    opacity: 0.9;
-  }
-
-  .portada-body {
-    flex: 1;
-    padding: 48px 32px 32px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .portada-tagline {
-    font-size: 10pt;
-    color: var(--gris);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .portada-titulo {
-    font-size: 13pt;
-    color: rgba(255,255,255,0.7);
-    font-weight: 400;
-    margin-bottom: 8px;
-  }
-
-  .portada-restaurante {
-    font-size: 36pt;
-    font-weight: 700;
-    color: var(--blanco);
-    line-height: 1.1;
-    margin-bottom: 4px;
-  }
-
-  .portada-ciudad {
-    font-size: 11pt;
-    color: var(--gris);
-    margin-bottom: 40px;
-  }
-
-  /* Nivel en portada */
-  .portada-nivel {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    border-radius: var(--radius);
-    margin-bottom: 32px;
-  }
-
-  .portada-nivel-num {
-    font-size: 28pt;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .portada-nivel-info { display: flex; flex-direction: column; }
-  .portada-nivel-nombre { font-size: 12pt; font-weight: 700; }
-  .portada-nivel-puntaje { font-size: 10pt; opacity: 0.8; }
-
-  /* Datos empresario en portada */
-  .portada-datos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: rgba(255,255,255,0.1);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 32px;
-  }
-
-  .portada-dato {
-    background: rgba(255,255,255,0.05);
-    padding: 12px 16px;
-  }
-
-  .portada-dato-label {
-    font-size: 8pt;
-    color: var(--gris);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 2px;
-  }
-
-  .portada-dato-valor {
-    font-size: 10pt;
-    font-weight: 600;
-    color: var(--blanco);
-  }
-
-  /* Dolores en portada */
-  .portada-dolores {
-    background: rgba(255,255,255,0.05);
-    border-left: 3px solid var(--naranja);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-  }
-
-  .portada-dolores-titulo {
-    font-size: 8pt;
-    color: var(--naranja);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-
-  .portada-dolor {
-    margin-bottom: 8px;
-  }
-
-  .portada-dolor-label {
-    font-size: 8pt;
-    color: var(--gris);
-    margin-bottom: 2px;
-  }
-
-  .portada-dolor-texto {
-    font-size: 9pt;
-    color: rgba(255,255,255,0.8);
-    font-style: italic;
-    line-height: 1.4;
-  }
-
-  .portada-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .portada-footer-marca {
-    font-size: 9pt;
-    color: var(--gris);
-  }
-
-  .portada-footer-fecha {
-    font-size: 9pt;
-    color: var(--gris);
-  }
-
-  /* ── CONTENIDO ── */
-  .contenido {
-    padding: 32px;
-  }
-
-  /* ── HEADER DE SECCIÓN ── */
-  .sec-header {
-    display: flex;
-    align-items: stretch;
-    margin-bottom: 20px;
-    margin-top: 32px;
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .sec-num {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 10px 16px;
-    font-size: 9pt;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .sec-titulo {
-    background: var(--naranja);
-    color: var(--blanco);
-    padding: 10px 20px;
-    font-size: 11pt;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    flex: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  /* ── SUBTÍTULOS ── */
-  .sub-titulo {
-    font-size: 10pt;
-    font-weight: 700;
-    color: var(--carbon);
-    margin: 20px 0 8px;
-    padding-bottom: 4px;
-    border-bottom: 2px solid var(--naranja);
-    display: inline-block;
-  }
-
-  /* ── CAJAS DE TEXTO ── */
-  .caja {
-    padding: 14px 18px;
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    font-size: 10pt;
-    line-height: 1.6;
-  }
-
-  .caja-arena { background: var(--arena); color: var(--carbon); }
-  .caja-naranja { background: #FBE9E7; border-left: 3px solid var(--naranja); }
-  .caja-carbon { background: var(--carbon); color: var(--blanco); }
-  .caja-gris { background: #F5F5F4; color: var(--carbon); }
-
-  .caja strong { color: var(--naranja); }
-  .caja-carbon strong { color: var(--naranja); }
-
-  .cita {
-    font-style: italic;
-    color: var(--carbon);
-    font-size: 10pt;
-    line-height: 1.6;
-  }
-
-  /* ── NIVEL DE MADUREZ ── */
-  .nivel-badge {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-  }
-
-  .nivel-num {
-    font-size: 32pt;
-    font-weight: 700;
-    line-height: 1;
-    min-width: 48px;
-    text-align: center;
-  }
-
-  .nivel-info { flex: 1; }
-  .nivel-nombre { font-size: 13pt; font-weight: 700; }
-  .nivel-puntaje { font-size: 10pt; margin-top: 2px; opacity: 0.8; }
-
-  /* ── TABLA DE DIMENSIONES ── */
-  .tabla-dims {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 12px;
-    font-size: 9.5pt;
-  }
-
-  .tabla-dims th {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 8px 12px;
-    text-align: left;
-    font-size: 8.5pt;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .tabla-dims th:nth-child(2),
-  .tabla-dims th:nth-child(3),
-  .tabla-dims th:nth-child(4) { text-align: center; }
-
-  .tabla-dims td {
-    padding: 7px 12px;
-    border-bottom: 1px solid #E5E4DF;
-    vertical-align: middle;
-  }
-
-  .tabla-dims td:nth-child(2),
-  .tabla-dims td:nth-child(3),
-  .tabla-dims td:nth-child(4) { text-align: center; }
-
-  .tabla-dims tr:nth-child(even) td { background: var(--arena); }
-
-  .dim-puntaje { font-weight: 700; font-size: 11pt; }
-
-  .etiqueta {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 8pt;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-  }
-
-  .et-critico    { background: var(--critico-bg);    color: var(--critico-fg); }
-  .et-riesgo     { background: var(--riesgo-bg);     color: var(--riesgo-fg); }
-  .et-atencion   { background: var(--atencion-bg);   color: var(--atencion-fg); }
-  .et-desarrollo { background: var(--desarrollo-bg); color: var(--desarrollo-fg); }
-  .et-avanzado   { background: var(--avanzado-bg);   color: var(--avanzado-fg); }
-  .et-fortaleza  { background: var(--fortaleza-bg);  color: var(--fortaleza-fg); }
-
-  .alerta-icon { font-size: 12pt; }
-
-  /* ── RADAR ── */
-  .radar-datos {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 9.5pt;
-    margin-bottom: 12px;
-  }
-
-  .radar-datos th {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 7px 12px;
-    font-size: 8.5pt;
-    text-transform: uppercase;
-  }
-
-  .radar-datos td {
-    padding: 6px 12px;
-    border-bottom: 1px solid #E5E4DF;
-    vertical-align: middle;
-  }
-
-  .radar-datos tr:nth-child(even) td { background: var(--arena); }
-
-  .barra-container {
-    width: 120px;
-    background: #E5E4DF;
-    border-radius: 10px;
-    height: 8px;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .barra-fill {
-    height: 8px;
-    border-radius: 10px;
-    display: block;
-  }
-
-  .zona-badge {
-    font-size: 8pt;
-    padding: 2px 8px;
-    border-radius: 10px;
-    display: inline-block;
-  }
-
-  /* ── HALLAZGOS ── */
-  .hallazgo {
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  .hallazgo-header {
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .hallazgo-icono { font-size: 14pt; }
-
-  .hallazgo-meta { flex: 1; }
-  .hallazgo-tipo { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; }
-  .hallazgo-titulo { font-size: 10.5pt; font-weight: 700; line-height: 1.3; margin-top: 2px; }
-
-  .hallazgo-body { padding: 12px 16px 14px; }
-  .hallazgo-desc { font-size: 9.5pt; line-height: 1.6; margin-bottom: 10px; }
-
-  .hallazgo-impacto {
-    font-size: 9.5pt;
-    font-weight: 700;
-    padding: 8px 12px;
-    border-radius: 4px;
-    line-height: 1.4;
-  }
-
-  /* Hallazgo crítico */
-  .h-critico .hallazgo-header { background: #B71C1C; color: var(--blanco); }
-  .h-critico .hallazgo-body { background: var(--critico-bg); }
-  .h-critico .hallazgo-impacto { background: rgba(183,28,28,0.1); color: #B71C1C; }
-
-  /* Hallazgo riesgo */
-  .h-riesgo .hallazgo-header { background: #E53935; color: var(--blanco); }
-  .h-riesgo .hallazgo-body { background: var(--riesgo-bg); }
-  .h-riesgo .hallazgo-impacto { background: rgba(229,57,53,0.1); color: #E53935; }
-
-  /* Hallazgo oportunidad */
-  .h-oportunidad .hallazgo-header { background: #2E7D32; color: var(--blanco); }
-  .h-oportunidad .hallazgo-body { background: var(--avanzado-bg); }
-  .h-oportunidad .hallazgo-impacto { background: rgba(46,125,50,0.1); color: #2E7D32; }
-
-  /* ── SEMÁFORO ── */
-  .semaforo {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 9.5pt;
-    margin-bottom: 12px;
-  }
-
-  .semaforo th {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 8px 12px;
-    font-size: 8.5pt;
-    text-transform: uppercase;
-  }
-
-  .semaforo td {
-    padding: 8px 12px;
-    border-bottom: 1px solid #E5E4DF;
-    vertical-align: middle;
-  }
-
-  .semaforo-circulo {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-
-  .contador-zonas {
-    display: flex;
-    gap: 12px;
-    padding: 10px 16px;
-    background: var(--arena);
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    font-size: 9pt;
-    font-weight: 600;
-    flex-wrap: wrap;
-  }
-
-  /* ── PLAN DE ACCIÓN ── */
-  .plan-intro {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 16px 20px;
-    border-radius: var(--radius);
-    margin-bottom: 16px;
-    font-size: 10pt;
-    line-height: 1.7;
-  }
-
-  .plan-intro p { margin-bottom: 8px; }
-  .plan-intro p:last-child { margin-bottom: 0; }
-  .plan-intro strong { color: var(--naranja); }
-
-  .leyenda-plan {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-  }
-
-  .leyenda-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 8.5pt;
-    padding: 4px 10px;
-    border-radius: 20px;
-  }
-
-  .leyenda-punto { width: 10px; height: 10px; border-radius: 50%; }
-
-  /* GANTT */
-  .tabla-gantt {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 8.5pt;
-    margin-bottom: 8px;
-  }
-
-  .tabla-gantt th {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 6px 8px;
-    text-align: center;
-    font-size: 7.5pt;
-    border-right: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .tabla-gantt th.col-accion { text-align: left; width: 28%; }
-  .tabla-gantt th.col-resp   { width: 14%; }
-  .tabla-gantt th.col-entrega{ width: 16%; }
-  .tabla-gantt th.col-sem    { width: 3.5%; }
-  .tabla-gantt th.col-dur    { width: 7%; }
-
-  .tabla-gantt td {
-    padding: 6px 8px;
-    border-bottom: 1px solid #E5E4DF;
-    border-right: 1px solid #E5E4DF;
-    vertical-align: top;
-  }
-
-  .tabla-gantt tr:nth-child(even) td { background: #FAFAF8; }
-
-  .gantt-accion { font-weight: 600; font-size: 8.5pt; line-height: 1.3; margin-bottom: 3px; }
-  .gantt-tipo   { font-size: 7.5pt; font-weight: 700; }
-  .gantt-dep    { font-size: 7.5pt; color: var(--gris); font-style: italic; }
-  .gantt-resp   { font-size: 8pt; color: var(--gris); font-style: italic; }
-  .gantt-entrega{ font-size: 8pt; color: var(--gris); font-style: italic; }
-
-  .celda-sem { text-align: center; padding: 4px 2px !important; }
-
-  .barra-gantt {
-    display: block;
-    width: 90%;
-    margin: 0 auto;
-    height: 18px;
-    border-radius: 3px;
-  }
-
-  .activo-victoria    { background: #1565C0; }
-  .activo-critica     { background: #B71C1C; }
-  .activo-depende     { background: #B45309; }
-  .activo-estructural { background: #D85A30; }
-  .activo-normal      { background: #2C2C2A; }
-  .inactivo           { background: transparent; }
-
-  .semanas-activas {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 8pt;
-    margin-bottom: 12px;
-  }
-
-  .semanas-activas td {
-    padding: 5px 4px;
-    text-align: center;
-    border: 1px solid #E5E4DF;
-    font-weight: 700;
-  }
-
-  .sem-ok  { background: var(--avanzado-bg); color: var(--avanzado-fg); }
-  .sem-alerta { background: var(--critico-bg); color: var(--critico-fg); }
-  .sem-label { background: var(--carbon); color: var(--blanco); text-align: left; padding-left: 10px !important; font-size: 8pt; }
-
-  .resumen-plan {
-    background: var(--naranja);
-    color: var(--blanco);
-    padding: 14px 18px;
-    border-radius: var(--radius);
-    font-size: 10pt;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  /* ── PRÓXIMO PASO ── */
-  .proximo-accion {
-    background: var(--carbon);
-    color: var(--blanco);
-    padding: 16px 20px;
-    border-radius: var(--radius) var(--radius) 0 0;
-    font-size: 10pt;
-    line-height: 1.7;
-  }
-
-  .proximo-primerpaso {
-    background: var(--avanzado-bg);
-    padding: 12px 20px;
-    font-size: 10pt;
-    line-height: 1.6;
-  }
-
-  .proximo-primerpaso strong { color: var(--avanzado-fg); }
-
-  .proximo-siguiente {
-    background: #FBE9E7;
-    padding: 14px 20px;
-    border-radius: 0 0 var(--radius) var(--radius);
-    font-size: 10pt;
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-
-  .proximo-cta {
-    font-weight: 700;
-    color: var(--naranja);
-  }
-
-  /* ── PIE DE PÁGINA ── */
-  .pie {
-    margin-top: 40px;
-    padding-top: 14px;
-    border-top: 1px solid #E5E4DF;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .pie-marca { font-size: 9pt; }
-  .pie-nombre { font-weight: 700; color: var(--naranja); }
-  .pie-rol    { color: var(--gris); font-size: 8.5pt; }
-  .pie-tagline { font-size: 8.5pt; color: var(--gris); font-style: italic; }
-
-  /* ── MES SEPARADOR EN GANTT ── */
-  .mes-header {
-    background: #E5E4DF;
-    text-align: center;
-    font-size: 7pt;
-    font-weight: 700;
-    color: var(--carbon);
-    padding: 2px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
+    --carbon:#2C2C2A;--naranja:#D85A30;--gris:#888780;--arena:#F1EFE8;--blanco:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Arial','Helvetica Neue',sans-serif;background:#E5E4DF;color:var(--carbon);font-size:11pt;line-height:1.5;}
+  .page{width:210mm;margin:0 auto 20px;background:var(--blanco);box-shadow:0 2px 12px rgba(0,0,0,0.15);}
+  @media print{body{background:white;margin:0;}.page{width:100%;margin:0;box-shadow:none;page-break-after:always;}.no-break{page-break-inside:avoid;}}
+  .portada{background:var(--carbon);min-height:297mm;display:flex;flex-direction:column;}
+  .portada-header{background:var(--naranja);padding:20px 32px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .portada-logo{font-size:28pt;font-weight:700;color:var(--blanco);}
+  .portada-endoso{font-size:9pt;color:rgba(255,255,255,0.85);font-style:italic;margin-top:2px;}
+  .portada-body{flex:1;padding:48px 32px 32px;display:flex;flex-direction:column;justify-content:space-between;}
+  .portada-tagline{font-size:9pt;color:var(--gris);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;}
+  .portada-titulo{font-size:12pt;color:rgba(255,255,255,0.6);margin-bottom:6px;}
+  .portada-restaurante{font-size:42pt;font-weight:700;color:var(--blanco);line-height:1.05;margin-bottom:4px;}
+  .portada-ciudad{font-size:11pt;color:var(--gris);margin-bottom:40px;}
+  .nivel-badge{display:inline-flex;align-items:center;gap:16px;padding:14px 20px;border-radius:6px;margin-bottom:32px;}
+  .nivel-num{font-size:32pt;font-weight:700;line-height:1;}
+  .nivel-nombre{font-size:13pt;font-weight:700;}
+  .nivel-puntaje{font-size:10pt;opacity:0.8;margin-top:2px;}
+  .portada-datos{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;margin-bottom:28px;}
+  .portada-dato{background:rgba(255,255,255,0.05);padding:12px 16px;}
+  .portada-dato-label{font-size:8pt;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+  .portada-dato-valor{font-size:10pt;font-weight:600;color:var(--blanco);}
+  .portada-dolores{background:rgba(255,255,255,0.05);border-left:3px solid var(--naranja);border-radius:0 6px 6px 0;padding:16px 20px;margin-bottom:28px;}
+  .portada-dolores-titulo{font-size:8pt;color:var(--naranja);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px;}
+  .portada-dolor{margin-bottom:10px;}
+  .portada-dolor-label{font-size:8pt;color:var(--gris);margin-bottom:2px;}
+  .portada-dolor-texto{font-size:9.5pt;color:rgba(255,255,255,0.8);font-style:italic;line-height:1.5;}
+  .portada-footer{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);}
+  .portada-footer span{font-size:8.5pt;color:var(--gris);}
+  .contenido{padding:32px;}
+  .sec-header{display:flex;align-items:stretch;margin:28px 0 16px;border-radius:6px;overflow:hidden;}
+  .sec-num{background:var(--carbon);color:var(--blanco);padding:9px 14px;font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;white-space:nowrap;}
+  .sec-titulo{background:var(--naranja);color:var(--blanco);padding:9px 20px;font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;flex:1;}
+  .sub-titulo{font-size:10pt;font-weight:700;color:var(--carbon);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--naranja);display:inline-block;}
+  .caja{padding:14px 18px;border-radius:6px;margin-bottom:10px;font-size:10pt;line-height:1.65;}
+  .caja-gris{background:#F5F5F4;}
+  .caja-naranja{background:#FBE9E7;border-left:3px solid var(--naranja);}
+  .caja-alerta{background:#FFEBEE;border-left:3px solid #B71C1C;}
+  .cita{font-style:italic;}
+  .tabla{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:9.5pt;}
+  .tabla th{background:var(--carbon);color:var(--blanco);padding:8px 12px;text-align:left;font-size:8.5pt;text-transform:uppercase;letter-spacing:0.5px;}
+  .tabla td{padding:7px 12px;border-bottom:1px solid #E5E4DF;vertical-align:middle;}
+  .tabla tr:nth-child(even) td{background:var(--arena);}
+  .tc{text-align:center!important;}
+  .etiqueta{display:inline-block;padding:3px 10px;border-radius:20px;font-size:8pt;font-weight:700;}
+  .semaforo-circulo{width:14px;height:14px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:6px;}
+  .contador-zonas{display:flex;gap:16px;padding:10px 16px;background:var(--arena);border-radius:6px;margin-bottom:10px;font-size:9pt;font-weight:600;flex-wrap:wrap;}
+  .plan-intro{background:var(--carbon);color:var(--blanco);padding:16px 20px;border-radius:6px;margin-bottom:14px;font-size:10pt;line-height:1.7;}
+  .plan-intro p{margin-bottom:8px;}
+  .plan-intro p:last-child{margin-bottom:0;}
+  .plan-intro strong{color:var(--naranja);}
+  .leyenda-plan{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+  .leyenda-item{display:flex;align-items:center;gap:5px;font-size:8pt;padding:4px 10px;border-radius:20px;}
+  .leyenda-punto{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .tabla-gantt{width:100%;border-collapse:collapse;font-size:7.8pt;margin-bottom:8px;}
+  .tabla-gantt th{background:var(--carbon);color:var(--blanco);padding:5px 6px;text-align:center;font-size:7pt;}
+  .tabla-gantt th.col-accion{text-align:left;width:30%;}
+  .tabla-gantt th.col-resp{width:13%;}
+  .tabla-gantt th.col-entrega{width:15%;}
+  .tabla-gantt th.col-sem{width:3.2%;}
+  .tabla-gantt th.col-dur{width:6%;}
+  .tabla-gantt td{padding:5px 7px;border-bottom:1px solid #E5E4DF;vertical-align:top;}
+  .semanas-activas{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:10px;}
+  .semanas-activas td{padding:5px 3px;text-align:center;border:1px solid #E5E4DF;font-weight:700;}
+  .sem-ok{background:#E8F5E9;color:#2E7D32;}
+  .sem-label{background:var(--carbon);color:var(--blanco);text-align:left!important;padding-left:10px!important;font-size:8pt;white-space:nowrap;}
+  .resumen-plan{background:var(--naranja);color:var(--blanco);padding:12px 18px;border-radius:6px;font-size:10pt;font-weight:600;margin-bottom:12px;}
+  .proximo-accion{background:var(--carbon);color:var(--blanco);padding:16px 20px;border-radius:6px 6px 0 0;font-size:10pt;line-height:1.7;}
+  .proximo-primerpaso{background:#E8F5E9;padding:12px 20px;font-size:10pt;line-height:1.6;}
+  .proximo-siguiente{background:#FBE9E7;padding:14px 20px;border-radius:0 0 6px 6px;font-size:10pt;line-height:1.7;margin-bottom:16px;}
+  .proximo-cta{font-weight:700;color:var(--naranja);}
+  .pie{margin-top:32px;padding-top:14px;border-top:1px solid #E5E4DF;display:flex;justify-content:space-between;align-items:center;}
+  .pie-nombre{font-weight:700;color:var(--naranja);font-size:10pt;}
+  .pie-rol{color:var(--gris);font-size:8.5pt;}
+  .pie-tagline{font-size:8.5pt;color:var(--gris);font-style:italic;}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════ -->
 <!-- PORTADA -->
-<!-- ══════════════════════════════════════ -->
 <div class="page">
 <div class="portada">
   <div class="portada-header">
     <div>
-      <div class="portada-logo-nombre">Pulso</div>
-      <div class="portada-logo-endoso">by Gustar · Consultoría Restaurantes</div>
+      <div class="portada-logo">Pulso</div>
+      <div class="portada-endoso">by Gustar · Consultoría Restaurantes</div>
     </div>
-    <div class="portada-onda">〜♡〜</div>
+    <div style="font-size:22pt;color:rgba(255,255,255,0.6);">〜♡〜</div>
   </div>
-
   <div class="portada-body">
     <div>
       <div class="portada-tagline">Tómale el pulso a tu restaurante</div>
       <div class="portada-titulo">Diagnóstico de Madurez Operacional</div>
       <div class="portada-restaurante">{{NOMBRE_RESTAURANTE}}</div>
       <div class="portada-ciudad">{{CIUDAD}} · {{FECHA}}</div>
-
-      <!-- Nivel en portada -->
-      <div class="nivel-badge" style="background: var(--nivel-{{NIVEL_NUM}}-bg); color: var(--nivel-{{NIVEL_NUM}}-fg); margin-bottom: 32px;">
-        <div class="portada-nivel-num" style="color: var(--nivel-{{NIVEL_NUM}}-fg);">{{NIVEL_NUM}}</div>
-        <div class="portada-nivel-info">
-          <div class="portada-nivel-nombre" style="color: var(--nivel-{{NIVEL_NUM}}-fg);">{{NIVEL_NOMBRE}}</div>
-          <div class="portada-nivel-puntaje" style="color: var(--nivel-{{NIVEL_NUM}}-fg);">Puntaje general: {{PUNTAJE_GENERAL}}%</div>
+      <div class="nivel-badge" style="background:{{NIVEL_BG}};">
+        <div class="nivel-num" style="color:{{NIVEL_FG}};">{{NIVEL_NUM}}</div>
+        <div>
+          <div class="nivel-nombre" style="color:{{NIVEL_FG}};">{{NIVEL_NOMBRE}}</div>
+          <div class="nivel-puntaje" style="color:{{NIVEL_FG}};">Puntaje general: {{PUNTAJE_GENERAL}}%</div>
         </div>
       </div>
-
-      <!-- Datos del empresario -->
       <div class="portada-datos">
-        <div class="portada-dato">
-          <div class="portada-dato-label">Empresario</div>
-          <div class="portada-dato-valor">{{NOMBRE_EMPRESARIO}}</div>
-        </div>
-        <div class="portada-dato">
-          <div class="portada-dato-label">Años en operación</div>
-          <div class="portada-dato-valor">{{ANOS_OPERACION}}</div>
-        </div>
-        <div class="portada-dato">
-          <div class="portada-dato-label">Equipo</div>
-          <div class="portada-dato-valor">{{NUM_EMPLEADOS}}</div>
-        </div>
-        <div class="portada-dato">
-          <div class="portada-dato-label">Puntos de venta</div>
-          <div class="portada-dato-valor">{{PUNTOS_VENTA}}</div>
-        </div>
+        <div class="portada-dato"><div class="portada-dato-label">Empresario</div><div class="portada-dato-valor">{{NOMBRE_EMPRESARIO}}</div></div>
+        <div class="portada-dato"><div class="portada-dato-label">Años en operación</div><div class="portada-dato-valor">{{ANOS_OPERACION}}</div></div>
+        <div class="portada-dato"><div class="portada-dato-label">Equipo</div><div class="portada-dato-valor">{{NUM_EMPLEADOS}}</div></div>
+        <div class="portada-dato"><div class="portada-dato-label">Puntos de venta</div><div class="portada-dato-valor">{{PUNTOS_VENTA}}</div></div>
       </div>
-
-      <!-- Dolores expresados -->
       <div class="portada-dolores">
         <div class="portada-dolores-titulo">Lo que me contaste antes de empezar</div>
-        <div class="portada-dolor">
-          <div class="portada-dolor-label">Tu dolor principal:</div>
-          <div class="portada-dolor-texto">"{{DOLOR_1}}"</div>
-        </div>
-        <div class="portada-dolor">
-          <div class="portada-dolor-label">Tu segundo dolor:</div>
-          <div class="portada-dolor-texto">"{{DOLOR_2}}"</div>
-        </div>
-        <div class="portada-dolor">
-          <div class="portada-dolor-label">Lo que esperabas:</div>
-          <div class="portada-dolor-texto">"{{EXPECTATIVA}}"</div>
-        </div>
+        <div class="portada-dolor"><div class="portada-dolor-label">Tu dolor principal:</div><div class="portada-dolor-texto">"{{DOLOR_1}}"</div></div>
+        <div class="portada-dolor"><div class="portada-dolor-label">Tu segundo dolor:</div><div class="portada-dolor-texto">"{{DOLOR_2}}"</div></div>
+        <div class="portada-dolor"><div class="portada-dolor-label">Lo que esperabas:</div><div class="portada-dolor-texto">"{{EXPECTATIVA}}"</div></div>
       </div>
     </div>
-
     <div class="portada-footer">
-      <div class="portada-footer-marca">Pulso by Gustar · Consultoría Restaurantes</div>
-      <div class="portada-footer-fecha">{{FECHA}} · Documento confidencial</div>
+      <span>Pulso by Gustar · Consultoría Restaurantes</span>
+      <span>{{FECHA}} · Documento confidencial</span>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ══════════════════════════════════════ -->
-<!-- CONTENIDO DEL INFORME -->
-<!-- ══════════════════════════════════════ -->
+<!-- PÁGINA 2: SECCIONES 1-3 -->
 <div class="page">
 <div class="contenido">
 
-  <!-- ── SECCIÓN 1: RESULTADO GLOBAL ── -->
-  <div class="sec-header">
-    <div class="sec-num">Sección 1</div>
-    <div class="sec-titulo">Resultado global</div>
-  </div>
+  <div class="sec-header"><div class="sec-num">Sección 1</div><div class="sec-titulo">Resultado global</div></div>
 
-  <!-- Frase apertura -->
   <div class="caja caja-gris cita">{{FRASE_APERTURA}}</div>
 
-  <!-- Nivel -->
   <div class="sub-titulo">Tu nivel de madurez operacional</div>
-  <div class="nivel-badge" style="background: var(--nivel-{{NIVEL_NUM}}-bg); color: var(--nivel-{{NIVEL_NUM}}-fg);">
+  <div class="nivel-badge" style="background:{{NIVEL_BG}};color:{{NIVEL_FG}};">
     <div class="nivel-num">{{NIVEL_NUM}}</div>
-    <div class="nivel-info">
-      <div class="nivel-nombre">{{NIVEL_NOMBRE}}</div>
-      <div class="nivel-puntaje">Puntaje general: {{PUNTAJE_GENERAL}}%</div>
-    </div>
+    <div><div class="nivel-nombre">{{NIVEL_NOMBRE}}</div><div class="nivel-puntaje">Puntaje general: {{PUNTAJE_GENERAL}}%</div></div>
   </div>
-  <div class="caja caja-naranja" style="font-size:10pt;">{{DESCRIPCION_NIVEL}}</div>
+  <div class="caja caja-naranja">{{DESCRIPCION_NIVEL}}</div>
+  {{ALERTA_CONTROL}}
 
-  <!-- Tabla dimensiones -->
   <div class="sub-titulo">Tus resultados por dimensión</div>
-  <table class="tabla-dims">
-    <thead>
-      <tr>
-        <th>Dimensión</th>
-        <th>Puntaje</th>
-        <th>Etiqueta</th>
-        <th>Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- REPETIR POR CADA DIMENSIÓN ordenada de mayor a menor puntaje -->
-      <!-- {{FILA_DIMENSION}} -->
-      <tr>
-        <td>{{DIM_NOMBRE}}</td>
-        <td><span class="dim-puntaje" style="color: var(--{{DIM_NIVEL}}-fg);">{{DIM_PUNTAJE}}%</span></td>
-        <td><span class="etiqueta et-{{DIM_NIVEL}}">{{DIM_ETIQUETA}}</span></td>
-        <td class="alerta-icon">{{DIM_ALERTA}}</td>
-      </tr>
-      <!-- FIN REPETICIÓN -->
-    </tbody>
+  <table class="tabla">
+    <thead><tr><th>Dimensión</th><th class="tc">Puntaje</th><th class="tc">Etiqueta</th><th class="tc">Estado</th></tr></thead>
+    <tbody>{{TABLA_DIMENSIONES}}</tbody>
   </table>
-  <p style="font-size:8.5pt; color:var(--gris); font-style:italic; margin-bottom:12px;">● Dimensión crítica &nbsp;⚠️ Dimensión crítica por debajo del 40% — alerta prioritaria</p>
+  <p style="font-size:8.5pt;color:var(--gris);font-style:italic;margin-bottom:14px;">● Dimensión crítica &nbsp; ⚠️ Dimensión crítica por debajo del 40%</p>
 
-  <!-- Resumen ejecutivo + dolores -->
   <div class="sub-titulo">Lo que encontré — y cómo se relaciona con lo que me contaste</div>
-  <div class="caja caja-gris" style="font-size:10pt;">{{RESUMEN_EJECUTIVO}}</div>
-  <div class="caja caja-naranja">
-    <strong>Sobre lo que me contaste:</strong> {{NARRATIVA_DOLORES}}
-  </div>
-  <div class="caja" style="background:var(--critico-bg); font-size:10pt;">
-    <strong style="color:#B71C1C;">Tu prioridad inmediata:</strong> {{PRIORIDAD_INMEDIATA}}
-  </div>
+  <div class="caja caja-gris">{{RESUMEN_EJECUTIVO}}</div>
+  <div class="caja caja-naranja"><strong style="color:var(--naranja);">Sobre lo que me contaste:</strong> {{NARRATIVA_DOLORES}}</div>
+  <div class="caja caja-alerta"><strong style="color:#B71C1C;">Tu prioridad inmediata:</strong> {{PRIORIDAD_INMEDIATA}}</div>
 
-  <!-- ── SECCIÓN 2: RADAR ── -->
-  <div class="sec-header">
-    <div class="sec-num">Sección 2</div>
-    <div class="sec-titulo">Radar visual por dimensión</div>
+  <div class="sec-header"><div class="sec-num">Sección 2</div><div class="sec-titulo">Radar visual por dimensión</div></div>
+  <div style="text-align:center;margin:16px 0;">{{RADAR_SVG}}</div>
+  <div style="background:var(--arena);border-radius:6px;padding:16px 20px;margin-bottom:10px;">
+    <p style="font-size:9.5pt;font-weight:700;color:var(--carbon);margin-bottom:10px;">¿Cómo leer este radar?</p>
+    <p style="font-size:9pt;color:var(--gris);line-height:1.65;margin-bottom:8px;">Cada eje representa una dimensión. Cuanto más cerca del borde, mejor está esa dimensión. Los huecos hacia el centro son las áreas que necesitan trabajo.</p>
+    <p style="font-size:8.5pt;color:var(--carbon);margin-top:8px;"><span style="color:#B71C1C;font-weight:700;">Anillo 35%:</span> Zona crítica — atención inmediata. &nbsp; <span style="color:#B45309;font-weight:700;">Anillo 50%:</span> Zona estable mínima. &nbsp; <span style="color:#2E7D32;font-weight:700;">Anillo 70%:</span> Zona avanzada.</p>
   </div>
+  <div class="caja caja-gris cita">{{FRASE_RADAR}}</div>
 
-  <table class="radar-datos">
-    <thead>
-      <tr>
-        <th style="width:4%; text-align:center;">Eje</th>
-        <th style="width:28%; text-align:left;">Dimensión</th>
-        <th style="width:10%; text-align:center;">Puntaje</th>
-        <th style="width:20%; text-align:center;">Barra</th>
-        <th style="width:38%; text-align:left;">Zona del radar</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- REPETIR POR CADA EJE DEL RADAR EN ORDEN NARRATIVO -->
-      <!-- {{FILA_RADAR}} -->
-      <tr>
-        <td style="text-align:center; font-weight:700; color:var(--naranja);">{{EJE_NUM}}</td>
-        <td>{{EJE_DIM}}</td>
-        <td style="text-align:center; font-weight:700; color:var(--{{EJE_NIVEL}}-fg);">{{EJE_PUNTAJE}}%</td>
-        <td style="text-align:center;">
-          <div class="barra-container">
-            <span class="barra-fill" style="width:{{EJE_PUNTAJE}}%; background:var(--{{EJE_NIVEL}}-fg);"></span>
-          </div>
-        </td>
-        <td style="font-size:8.5pt; color:var(--gris); font-style:italic;">{{EJE_ZONA}}</td>
-      </tr>
-      <!-- FIN REPETICIÓN -->
-    </tbody>
-  </table>
-
-  <div class="caja caja-arena" style="font-size:10pt; font-style:italic; border-left:3px solid var(--naranja);">
-    {{FRASE_RADAR}}
-  </div>
-
-  <!-- ── SECCIÓN 3: HALLAZGOS ── -->
-  <div class="sec-header">
-    <div class="sec-num">Sección 3</div>
-    <div class="sec-titulo">Hallazgos críticos</div>
-  </div>
-
-  <p style="font-size:9pt; color:var(--gris); font-style:italic; margin-bottom:14px;">{{ESCENARIO_HALLAZGOS}}</p>
-
-  <!-- REPETIR POR CADA HALLAZGO -->
-  <!-- {{BLOQUE_HALLAZGO}} -->
-  <div class="hallazgo h-{{HALLAZGO_TIPO}} no-break">
-    <div class="hallazgo-header">
-      <div class="hallazgo-icono">{{HALLAZGO_ICONO}}</div>
-      <div class="hallazgo-meta">
-        <div class="hallazgo-tipo">{{HALLAZGO_TIPO_LABEL}} · {{HALLAZGO_DIM}} ({{HALLAZGO_PUNTAJE}}%)</div>
-        <div class="hallazgo-titulo">"{{HALLAZGO_TITULO}}"</div>
-      </div>
-    </div>
-    <div class="hallazgo-body">
-      <div class="hallazgo-desc">{{HALLAZGO_DESC}}</div>
-      <div class="hallazgo-impacto"><strong>{{HALLAZGO_IMPACTO_LABEL}}:</strong> {{HALLAZGO_IMPACTO}}</div>
-    </div>
-  </div>
-  <!-- FIN REPETICIÓN -->
+  <div class="sec-header"><div class="sec-num">Sección 3</div><div class="sec-titulo">Hallazgos críticos</div></div>
+  <p style="font-size:9pt;color:var(--gris);font-style:italic;margin-bottom:14px;">{{ESCENARIO_HALLAZGOS}}</p>
+  {{HALLAZGOS}}
 
 </div>
 </div>
 
-<!-- ══════════════════════════════════════ -->
-<!-- PÁGINA 3: SEMÁFORO + PLAN + PRÓXIMO PASO -->
-<!-- ══════════════════════════════════════ -->
+<!-- PÁGINA 3: SECCIONES 4-6 -->
 <div class="page">
 <div class="contenido">
 
-  <!-- ── SECCIÓN 4: SEMÁFORO ── -->
-  <div class="sec-header">
-    <div class="sec-num">Sección 4</div>
-    <div class="sec-titulo">Semáforo de procesos</div>
-  </div>
-
-  <table class="semaforo">
-    <thead>
-      <tr>
-        <th style="width:5%; text-align:center;"></th>
-        <th style="text-align:left;">Dimensión</th>
-        <th style="width:14%; text-align:center;">Puntaje</th>
-        <th style="width:20%; text-align:center;">Etiqueta</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- REPETIR ordenado de mayor a menor puntaje -->
-      <!-- {{FILA_SEMAFORO}} -->
-      <tr>
-        <td style="text-align:center;">
-          <span class="semaforo-circulo" style="background:var(--{{SEM_NIVEL}}-fg);"></span>
-        </td>
-        <td>{{SEM_DIM}}</td>
-        <td style="text-align:center; font-weight:700; color:var(--{{SEM_NIVEL}}-fg);">{{SEM_PUNTAJE}}%</td>
-        <td style="text-align:center;"><span class="etiqueta et-{{SEM_NIVEL}}">{{SEM_ETIQUETA}}</span></td>
-      </tr>
-      <!-- FIN REPETICIÓN -->
-    </tbody>
+  <div class="sec-header"><div class="sec-num">Sección 4</div><div class="sec-titulo">Semáforo de procesos</div></div>
+  <table class="tabla">
+    <thead><tr><th class="tc" style="width:5%;"></th><th>Dimensión</th><th class="tc" style="width:14%;">Puntaje</th><th class="tc" style="width:22%;">Etiqueta</th></tr></thead>
+    <tbody>{{TABLA_SEMAFORO}}</tbody>
   </table>
-
   <div class="contador-zonas">
-    <span>{{CONTADOR_CRITICO_RIESGO}}</span>
-    <span>·</span>
-    <span>{{CONTADOR_ATENCION}}</span>
-    <span>·</span>
+    <span>{{CONTADOR_CRITICO_RIESGO}}</span><span>·</span>
+    <span>{{CONTADOR_ATENCION}}</span><span>·</span>
     <span>{{CONTADOR_AVANZADO_FORTALEZA}}</span>
   </div>
+  <div class="caja caja-naranja cita">{{FRASE_SEMAFORO}}</div>
 
-  <div class="caja caja-naranja" style="font-style:italic; font-size:10pt;">{{FRASE_SEMAFORO}}</div>
-
-  <!-- ── SECCIÓN 5: PLAN DE ACCIÓN ── -->
-  <div class="sec-header">
-    <div class="sec-num">Sección 5</div>
-    <div class="sec-titulo">Tu plan de acción</div>
-  </div>
-
-  <!-- Introducción plan -->
+  <div class="sec-header"><div class="sec-num">Sección 5</div><div class="sec-titulo">Tu plan de acción</div></div>
   <div class="plan-intro">
-    <p>Revisé tus resultados y diseñé un camino de <strong>10 a 12 semanas</strong> — aproximadamente 3 meses — pensando en que tú tienes un restaurante que opera todos los días y no puedes parar todo para implementar cambios. Por eso en este plan nunca tendrás más de 2 tareas activas al mismo tiempo, y cuando sea posible, las que puede ejecutar tu administrador las programé en paralelo con las tuyas para avanzar sin que todo dependa de ti.</p>
-    <p>El orden no es aleatorio. Hay tareas que no pueden empezar hasta que otras estén terminadas — te lo indico claramente en el plan. Y hay tareas que van primero no porque sean las más fáciles, sino porque son las que más impacto tienen en el menor tiempo posible.</p>
-    <p>Esas son las <strong>victorias tempranas</strong> — y son esenciales. No solo para el negocio y los números, sino para tu equipo y para ti. Nada genera más energía para seguir que ver resultados concretos en los primeros 15 días. La semana 1 está diseñada exactamente para eso.</p>
+    <p>Revisé tus resultados y diseñé un camino de <strong>10 a 12 semanas</strong> pensando en que tienes un restaurante que opera todos los días. Por eso en este plan nunca tendrás más de 2 tareas activas al mismo tiempo.</p>
+    <p>El orden no es aleatorio — hay tareas que no pueden empezar hasta que otras estén terminadas. Y hay tareas que van primero porque son las que más impacto tienen en el menor tiempo posible.</p>
+    <p>Esas son las <strong>victorias tempranas</strong> — esenciales para el negocio, para tu equipo y para ti. La semana 1 está diseñada exactamente para eso.</p>
   </div>
-
-  <!-- Leyenda -->
   <div class="leyenda-plan">
-    <div class="leyenda-item" style="background:#E3F0FF;">
-      <div class="leyenda-punto" style="background:#1565C0;"></div>
-      Victoria rápida — semana 1
-    </div>
-    <div class="leyenda-item" style="background:var(--critico-bg);">
-      <div class="leyenda-punto" style="background:#B71C1C;"></div>
-      Dimensión crítica — prioridad alta
-    </div>
-    <div class="leyenda-item" style="background:var(--atencion-bg);">
-      <div class="leyenda-punto" style="background:#B45309;"></div>
-      Depende de tarea anterior
-    </div>
-    <div class="leyenda-item" style="background:var(--riesgo-bg);">
-      <div class="leyenda-punto" style="background:#D85A30;"></div>
-      Acción estructural — mes 3
-    </div>
+    <div class="leyenda-item" style="background:#E3F0FF;"><div class="leyenda-punto" style="background:#1565C0;"></div>Victoria rápida</div>
+    <div class="leyenda-item" style="background:#FFEBEE;"><div class="leyenda-punto" style="background:#B71C1C;"></div>Dimensión crítica</div>
+    <div class="leyenda-item" style="background:#FBE9E7;"><div class="leyenda-punto" style="background:#B45309;"></div>Depende de otra</div>
+    <div class="leyenda-item" style="background:#FFCDD2;"><div class="leyenda-punto" style="background:#D85A30;"></div>Acción estructural</div>
   </div>
-
-  <!-- Tabla Gantt -->
   <table class="tabla-gantt">
     <thead>
       <tr>
-        <th class="col-accion" rowspan="2" style="text-align:left;">Acción</th>
+        <th class="col-accion" rowspan="2">Acción</th>
         <th class="col-resp" rowspan="2">Responsable</th>
         <th class="col-entrega" rowspan="2">Entregable</th>
-        <th colspan="4" class="mes-header" style="background:#2C2C2A; color:white; font-size:7.5pt;">Mes 1</th>
-        <th colspan="4" class="mes-header" style="background:#4E342E; color:white; font-size:7.5pt;">Mes 2</th>
-        <th colspan="4" class="mes-header" style="background:#B45309; color:white; font-size:7.5pt;">Mes 3</th>
+        <th colspan="4" style="background:#2C2C2A;font-size:7pt;text-align:center;">Mes 1</th>
+        <th colspan="4" style="background:#4E342E;font-size:7pt;text-align:center;">Mes 2</th>
+        <th colspan="4" style="background:#B45309;font-size:7pt;text-align:center;">Mes 3</th>
         <th class="col-dur" rowspan="2">Dur.</th>
       </tr>
       <tr>
@@ -1001,84 +219,31 @@
         <th class="col-sem">S9</th><th class="col-sem">S10</th><th class="col-sem">S11</th><th class="col-sem">S12</th>
       </tr>
     </thead>
-    <tbody>
-      <!-- REPETIR POR CADA ACCIÓN DEL PLAN -->
-      <!-- {{FILA_GANTT}} -->
-      <tr>
-        <td>
-          <div class="gantt-accion"><span style="color:var(--naranja); font-weight:700;">{{GA_NUM}}.</span> {{GA_ACCION}}</div>
-          <div class="gantt-tipo" style="color:var(--{{GA_TIPO_COLOR}}-fg);">{{GA_TIPO_LABEL}}</div>
-          <div class="gantt-dep">{{GA_DEPENDE}}</div>
-        </td>
-        <td class="gantt-resp">{{GA_RESPONSABLE}}</td>
-        <td class="gantt-entrega">{{GA_ENTREGABLE}}</td>
-        <!-- 12 celdas de semanas — activo o inactivo según corresponda -->
-        <td class="celda-sem"><span class="barra-gantt {{GA_S1}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S2}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S3}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S4}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S5}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S6}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S7}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S8}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S9}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S10}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S11}}"></span></td>
-        <td class="celda-sem"><span class="barra-gantt {{GA_S12}}"></span></td>
-        <td style="text-align:center; font-weight:700; font-size:8pt; color:var(--naranja);">{{GA_DUR}}</td>
-      </tr>
-      <!-- FIN REPETICIÓN -->
-    </tbody>
+    <tbody>{{TABLA_GANTT}}</tbody>
   </table>
-
-  <!-- Tareas activas por semana -->
   <table class="semanas-activas">
     <tr>
       <td class="sem-label">Tareas activas por semana</td>
-      <!-- REPETIR S1-S12 con clase sem-ok o sem-alerta -->
-      <td class="{{SEM_1_CLASE}}">{{SEM_1_NUM}}</td>
-      <td class="{{SEM_2_CLASE}}">{{SEM_2_NUM}}</td>
-      <td class="{{SEM_3_CLASE}}">{{SEM_3_NUM}}</td>
-      <td class="{{SEM_4_CLASE}}">{{SEM_4_NUM}}</td>
-      <td class="{{SEM_5_CLASE}}">{{SEM_5_NUM}}</td>
-      <td class="{{SEM_6_CLASE}}">{{SEM_6_NUM}}</td>
-      <td class="{{SEM_7_CLASE}}">{{SEM_7_NUM}}</td>
-      <td class="{{SEM_8_CLASE}}">{{SEM_8_NUM}}</td>
-      <td class="{{SEM_9_CLASE}}">{{SEM_9_NUM}}</td>
-      <td class="{{SEM_10_CLASE}}">{{SEM_10_NUM}}</td>
-      <td class="{{SEM_11_CLASE}}">{{SEM_11_NUM}}</td>
-      <td class="{{SEM_12_CLASE}}">{{SEM_12_NUM}}</td>
+      <td class="{{SEM_1_CLASE}}">{{SEM_1_NUM}}</td><td class="{{SEM_2_CLASE}}">{{SEM_2_NUM}}</td>
+      <td class="{{SEM_3_CLASE}}">{{SEM_3_NUM}}</td><td class="{{SEM_4_CLASE}}">{{SEM_4_NUM}}</td>
+      <td class="{{SEM_5_CLASE}}">{{SEM_5_NUM}}</td><td class="{{SEM_6_CLASE}}">{{SEM_6_NUM}}</td>
+      <td class="{{SEM_7_CLASE}}">{{SEM_7_NUM}}</td><td class="{{SEM_8_CLASE}}">{{SEM_8_NUM}}</td>
+      <td class="{{SEM_9_CLASE}}">{{SEM_9_NUM}}</td><td class="{{SEM_10_CLASE}}">{{SEM_10_NUM}}</td>
+      <td class="{{SEM_11_CLASE}}">{{SEM_11_NUM}}</td><td class="{{SEM_12_CLASE}}">{{SEM_12_NUM}}</td>
     </tr>
   </table>
+  <div class="resumen-plan">⏱ Duración total: {{DURACION_TOTAL}} · {{MENSAJE_CIERRE_PLAN}}</div>
 
-  <div class="resumen-plan">
-    ⏱ Duración total del plan: {{DURACION_TOTAL}} · {{MENSAJE_CIERRE_PLAN}}
-  </div>
-
-  <!-- ── SECCIÓN 6: PRÓXIMO PASO ── -->
-  <div class="sec-header">
-    <div class="sec-num">Sección 6</div>
-    <div class="sec-titulo">Tu próximo paso</div>
-  </div>
-
-  <div class="proximo-accion">
-    🎯 <strong style="color:var(--naranja);">Tu acción para esta semana:</strong><br><br>
-    {{ACCION_SEMANA}}
-  </div>
-  <div class="proximo-primerpaso">
-    <strong>Por dónde empezar hoy:</strong> {{PRIMER_PASO}}
-  </div>
+  <div class="sec-header"><div class="sec-num">Sección 6</div><div class="sec-titulo">Tu próximo paso</div></div>
+  <div class="proximo-accion">🎯 <strong style="color:var(--naranja);">Tu acción para esta semana:</strong><br><br>{{ACCION_SEMANA}}</div>
+  <div class="proximo-primerpaso"><strong style="color:#2E7D32;">Por dónde empezar hoy:</strong> {{PRIMER_PASO}}</div>
   <div class="proximo-siguiente">
     {{TEXTO_ACOMPANAMIENTO}}<br><br>
     <span class="proximo-cta">{{CTA_ACOMPANAMIENTO}}</span>
   </div>
 
-  <!-- PIE DE PÁGINA -->
   <div class="pie">
-    <div class="pie-marca">
-      <div class="pie-nombre">{{NOMBRE_SONIA}}</div>
-      <div class="pie-rol">Fundadora · Gustar Consultoría Restaurantes</div>
-    </div>
+    <div><div class="pie-nombre">{{NOMBRE_SONIA}}</div><div class="pie-rol">Fundadora · Gustar Consultoría Restaurantes</div></div>
     <div class="pie-tagline">Tómale el PULSO a tu restaurante · Pulso by Gustar</div>
   </div>
 
