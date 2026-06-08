@@ -621,7 +621,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = req.body;
+    // Normalizar claves a minúsculas para manejar variaciones de Zapier
+    const rawBody = req.body;
+    const body = {};
+    for (const [key, value] of Object.entries(rawBody)) {
+      body[key.toLowerCase()] = value;
+    }
+    // Mapear variaciones comunes de nombres de campos
+    if (!body.empresario && body['first name']) body.empresario = body['first name'];
+    if (!body.empresario && body['nombre']) body.empresario = body['nombre'];
+    if (!body.restaurante && body['restaurante']) body.restaurante = body['restaurante'];
+
     const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
 
     if (!apiKey) {
