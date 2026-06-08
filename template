@@ -1,0 +1,156 @@
+Pulso
+by Gustar · Consultoría Restaurantes
+〜♡〜
+TÓMALE EL PULSO A TU RESTAURANTE
+Diagnóstico de Madurez Operacional
+{{NOMBRE_RESTAURANTE}}
+{{CIUDAD}} · {{FECHA}}
+{{NIVEL_NUM}}
+{{NIVEL_NOMBRE}}
+Puntaje general: {{PUNTAJE_GENERAL}}%
+EMPRESARIO
+{{NOMBRE_EMPRESARIO}}
+AÑOS EN OPERACIÓN
+{{ANOS_OPERACION}}
+EQUIPO
+{{NUM_EMPLEADOS}}
+PUNTOS DE VENTA
+{{PUNTOS_VENTA}}
+LO QUE ME CONTASTE ANTES DE EMPEZAR
+Tu dolor principal:
+"{{DOLOR_1}}"
+Tu segundo dolor:
+"{{DOLOR_2}}"
+Lo que esperabas:
+"{{EXPECTATIVA}}"
+Pulso by Gustar · Consultoría Restaurantes
+{{FECHA}} · Documento confidencial
+SECCIÓN 1 RESULTADO GLOBAL
+{{FRASE_APERTURA}}
+Tu nivel de madurez operacional
+{{NIVEL_NUM}}
+{{NIVEL_NOMBRE}}
+Puntaje general: {{PUNTAJE_GENERAL}}%
+{{DESCRIPCION_NIVEL}}
+Tus resultados por dimensión
+DIMENSIÓN
+PUNTAJE
+ETIQUETA
+ESTADO
+{{DIM_NOMBRE}}
+{{DIM_PUNTAJE}}%
+{{DIM_ETIQUETA}}
+{{DIM_ALERTA}}
+● Dimensión crítica  ⚠️ Dimensión crítica por debajo del 40% — alerta prioritaria
+Lo que encontré — y cómo se relaciona con lo que me contaste
+{{RESUMEN_EJECUTIVO}}
+Sobre lo que me contaste: {{NARRATIVA_DOLORES}} 
+Tu prioridad inmediata: {{PRIORIDAD_INMEDIATA}} 
+SECCIÓN 2 RADAR VISUAL POR DIMENSIÓN
+EJE
+DIMENSIÓN
+PUNTAJE
+BARRA
+ZONA DEL RADAR
+{{EJE_NUM}}
+{{EJE_DIM}}
+{{EJE_PUNTAJE}}%
+
+{{EJE_ZONA}}
+{{FRASE_RADAR}} 
+SECCIÓN 3 HALLAZGOS CRÍTICOS
+{{ESCENARIO_HALLAZGOS}}
+{{HALLAZGO_ICONO}}
+{{HALLAZGO_TIPO_LABEL}} · {{HALLAZGO_DIM}} ({{HALLAZGO_PUNTAJE}}%)
+"{{HALLAZGO_TITULO}}"
+{{HALLAZGO_DESC}}
+{{HALLAZGO_IMPACTO_LABEL}}: {{HALLAZGO_IMPACTO}}
+SECCIÓN 4 SEMÁFORO DE PROCESOS
+
+DIMENSIÓN
+PUNTAJE
+ETIQUETA
+
+{{SEM_DIM}}
+{{SEM_PUNTAJE}}%
+{{SEM_ETIQUETA}}
+{{CONTADOR_CRITICO_RIESGO}}
+·
+{{CONTADOR_ATENCION}}
+·
+{{CONTADOR_AVANZADO_FORTALEZA}}
+{{FRASE_SEMAFORO}}
+SECCIÓN 5 TU PLAN DE ACCIÓN
+Revisé tus resultados y diseñé un camino de 10 a 12 semanas — aproximadamente 3 meses — pensando en que tú tienes un restaurante que opera todos los días y no puedes parar todo para implementar cambios. Por eso en este plan nunca tendrás más de 2 tareas activas al mismo tiempo, y cuando sea posible, las que puede ejecutar tu administrador las programé en paralelo con las tuyas para avanzar sin que todo dependa de ti.
+El orden no es aleatorio. Hay tareas que no pueden empezar hasta que otras estén terminadas — te lo indico claramente en el plan. Y hay tareas que van primero no porque sean las más fáciles, sino porque son las que más impacto tienen en el menor tiempo posible.
+Esas son las victorias tempranas — y son esenciales. No solo para el negocio y los números, sino para tu equipo y para ti. Nada genera más energía para seguir que ver resultados concretos en los primeros 15 días. La semana 1 está diseñada exactamente para eso.
+
+Victoria rápida — semana 1
+
+Dimensión crítica — prioridad alta
+
+Depende de tarea anterior
+
+Acción estructural — mes 3
+Acción
+Responsable
+Entregable
+MES 1
+MES 2
+MES 3
+Dur.
+S1
+S2
+S3
+S4
+S5
+S6
+S7
+S8
+S9
+S10
+S11
+S12
+{{GA_NUM}}. {{GA_ACCION}}
+{{GA_TIPO_LABEL}}
+{{GA_DEPENDE}}
+{{GA_RESPONSABLE}}
+{{GA_ENTREGABLE}}
+
+
+
+
+
+
+
+
+
+
+
+
+{{GA_DUR}}
+Tareas activas por semana
+{{SEM_1_NUM}}
+{{SEM_2_NUM}}
+{{SEM_3_NUM}}
+{{SEM_4_NUM}}
+{{SEM_5_NUM}}
+{{SEM_6_NUM}}
+{{SEM_7_NUM}}
+{{SEM_8_NUM}}
+{{SEM_9_NUM}}
+{{SEM_10_NUM}}
+{{SEM_11_NUM}}
+{{SEM_12_NUM}}
+⏱ Duración total del plan: {{DURACION_TOTAL}} · {{MENSAJE_CIERRE_PLAN}} 
+SECCIÓN 6 TU PRÓXIMO PASO
+🎯 Tu acción para esta semana:
+
+{{ACCION_SEMANA}} 
+Por dónde empezar hoy: {{PRIMER_PASO}} 
+{{TEXTO_ACOMPANAMIENTO}}
+
+{{CTA_ACOMPANAMIENTO}} 
+{{NOMBRE_SONIA}}
+Fundadora · Gustar Consultoría Restaurantes
+Tómale el PULSO a tu restaurante · Pulso by Gustar
