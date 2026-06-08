@@ -621,17 +621,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Normalizar claves a minúsculas para manejar variaciones de Zapier
+    // Normalizar claves
     const rawBody = req.body;
     const body = {};
     for (const [key, value] of Object.entries(rawBody)) {
+      const normalKey = key
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '_')
+        .trim();
+      body[normalKey] = value;
       body[key.toLowerCase()] = value;
     }
-    // Mapear variaciones comunes de nombres de campos
-    if (!body.empresario && body['first name']) body.empresario = body['first name'];
-    if (!body.empresario && body['nombre']) body.empresario = body['nombre'];
-    if (!body.restaurante && body['restaurante']) body.restaurante = body['restaurante'];
-
+    if (!body.empresario) body.empresario = body['first name'] || body['nombre'] || '';
+    if (!body.anos) body.anos = body['a_os'] || body['anos_en_operacion'] || body['anos_operacion'] || '';
+    if (!body.puntos_venta) body.puntos_venta = body['puntos_de_venta'] || body['puntos'] || '';
+    if (!body.dolor_1) body.dolor_1 = body['dolor1'] || body['dolor_principal'] || '';
+    if (!body.dolor_2) body.dolor_2 = body['dolor2'] || body['segundo_dolor'] || '';
     const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
 
     if (!apiKey) {
