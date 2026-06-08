@@ -483,8 +483,73 @@ function generarHTML(template, diagnostico, textosClaude) {
 // ── LLAMADA A CLAUDE ──
 async function llamarClaude(apiKey, promptMaestro, diagnostico) {
   const userMessage = `Genera los textos consultivos para el informe PULSO del siguiente diagnóstico.
-Usa los datos del JSON como fuente de verdad absoluta. No recalcules puntajes.
-Devuelve ÚNICAMENTE el JSON válido especificado. Sin markdown, sin texto adicional.
+
+REGLAS OBLIGATORIAS:
+- Usa los datos del JSON como fuente de verdad absoluta.
+- No recalcules puntajes.
+- No devuelvas HTML.
+- No devuelvas markdown.
+- No uses bloques de código.
+- Devuelve únicamente un objeto JSON válido.
+- Todos los valores deben ser strings, números, arrays u objetos JSON válidos.
+- No uses saltos de línea dentro de strings; usa espacios.
+- No uses comillas dobles dentro de los textos; si necesitas citar algo, usa comillas simples.
+- No cierres la respuesta hasta completar todo el JSON.
+- El campo acciones debe traer máximo 10 acciones.
+- El campo hallazgos debe traer máximo 4 hallazgos.
+- Las semanas de cada acción deben ser números entre 1 y 12.
+
+ESTRUCTURA EXACTA DE SALIDA:
+{
+  "frase_apertura": "string",
+  "descripcion_nivel": "string",
+  "resumen_ejecutivo": "string",
+  "narrativa_dolores": "string",
+  "prioridad_inmediata": "string",
+  "frase_radar": "string",
+  "hallazgos": [
+    {
+      "tipo": "critico|oportunidad",
+      "dimension": "string",
+      "puntaje": 0,
+      "titulo": "string",
+      "descripcion": "string",
+      "impacto": "string"
+    }
+  ],
+  "frase_semaforo": "string",
+  "acciones": [
+    {
+      "num": 1,
+      "dimension": "string",
+      "accion": "string",
+      "recurso": "string",
+      "tiempo": "string",
+      "entregable": "string",
+      "tipo": "victoria|critica|depende|estructural|normal",
+      "semanas": [1],
+      "depende_de": null
+    }
+  ],
+  "duracion_plan": "string",
+  "accion_semana": "string",
+  "primer_paso": "string",
+  "texto_acompanamiento": "string"
+}
+
+LÍMITES DE EXTENSIÓN:
+- frase_apertura: máximo 90 palabras.
+- descripcion_nivel: máximo 80 palabras.
+- resumen_ejecutivo: máximo 90 palabras.
+- narrativa_dolores: máximo 90 palabras.
+- prioridad_inmediata: máximo 45 palabras.
+- frase_radar: máximo 45 palabras.
+- frase_semaforo: máximo 45 palabras.
+- cada descripcion de hallazgo: máximo 70 palabras.
+- cada accion: máximo 20 palabras.
+- accion_semana: máximo 70 palabras.
+- primer_paso: máximo 35 palabras.
+- texto_acompanamiento: usa exactamente este texto adaptando el nombre del restaurante: Este diagnóstico te muestra dónde está [Nombre del restaurante] hoy. Pero saber dónde estás es solo el primer paso — el trabajo real está en la implementación. Si quieres que te acompañe semana a semana en ese proceso, con orientación concreta sobre qué hacer, cómo hacerlo y cómo medir que está funcionando, tengo un programa diseñado exactamente para eso.
 
 JSON del diagnóstico:
 ${JSON.stringify(diagnostico)}`;
@@ -497,25 +562,47 @@ ${JSON.stringify(diagnostico)}`;
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4000,
-      temperature: 0.3,
+      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
+      max_tokens: 8000,
+      temperature: 0.1,
       system: promptMaestro,
       messages: [{ role: 'user', content: userMessage }]
     })
   });
 
+  const rawResponse = await response.text();
+
   if (!response.ok) {
-    const err = await response.json();
-    throw new Error('Claude API error: ' + JSON.stringify(err));
+    throw new Error(`Claude API error ${response.status}: ${rawResponse}`);
   }
 
-  const data = await response.json();
-  const texto = data.content[0].text.trim();
+  let data;
+  try {
+    data = JSON.parse(rawResponse);
+  } catch (err) {
+    throw new Error('Claude API devolvió una respuesta no JSON: ' + rawResponse.slice(0, 1000));
+  }
+
+  const texto = data.content?.[0]?.text?.trim();
+
+  if (!texto) {
+    throw new Error('Claude devolvió una respuesta vacía o sin content[0].text');
+  }
 
   // Limpiar markdown si Claude lo añadió
-  const clean = texto.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
-  return JSON.parse(clean);
+  const clean = texto
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+
+  try {
+    return JSON.parse(clean);
+  } catch (err) {
+    console.error('Claude raw output:', texto);
+    console.error('Claude clean output:', clean);
+    throw new Error('Claude no devolvió JSON válido: ' + clean.slice(0, 1200));
+  }
 }
 
 // ── HANDLER PRINCIPAL ──
@@ -523,7 +610,7 @@ export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -535,10 +622,20 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body;
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'ANTHROPIC_API_KEY no configurada' });
+      return res.status(500).json({
+        ok: false,
+        error: 'ANTHROPIC_API_KEY no configurada en Vercel'
+      });
+    }
+
+    if (!apiKey.startsWith('sk-ant-')) {
+      return res.status(500).json({
+        ok: false,
+        error: 'ANTHROPIC_API_KEY tiene formato inválido. Debe empezar por sk-ant-'
+      });
     }
 
     // Leer archivos desde GitHub
@@ -547,6 +644,23 @@ export default async function handler(req, res) {
       fetch(GITHUB_RAW + '/prompt_maestro.txt'),
       fetch(GITHUB_RAW + '/template.html')
     ]);
+
+    if (!promptRes.ok) {
+      return res.status(500).json({
+        ok: false,
+        error: 'No se pudo cargar prompt_maestro.txt desde GitHub',
+        status: promptRes.status
+      });
+    }
+
+    if (!templateRes.ok) {
+      return res.status(500).json({
+        ok: false,
+        error: 'No se pudo cargar template.html desde GitHub',
+        status: templateRes.status
+      });
+    }
+
     const promptMaestro = await promptRes.text();
     const template = await templateRes.text();
 
